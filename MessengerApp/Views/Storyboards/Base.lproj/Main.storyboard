@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Main View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="MessengerApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="BYZ-38-t0r" customClass="LoginViewController" customModule="MessengerApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -34,6 +34,9 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Log In">
                                     <fontDescription key="titleFontDescription" type="system" weight="light" pointSize="25"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="logInButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TZe-UO-Est"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email Address..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZcZ-jD-OjX">
                                 <rect key="frame" x="67" y="328" width="280" height="50"/>
@@ -91,8 +94,16 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Ifi-2E-BWi">
-                        <barButtonItem key="rightBarButtonItem" title="Register" id="K9S-Xy-7sD"/>
+                        <barButtonItem key="rightBarButtonItem" title="Register" id="K9S-Xy-7sD">
+                            <connections>
+                                <action selector="registerBarButtonAction:" destination="BYZ-38-t0r" id="1kD-0p-Ng3"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="emailAddressTf" destination="ZcZ-jD-OjX" id="JNL-vq-5gF"/>
+                        <outlet property="passwordTf" destination="Hz6-9T-bi2" id="xYB-2k-hhO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -101,7 +112,7 @@
         <!--Register View Controller-->
         <scene sceneID="vNU-w0-F4b">
             <objects>
-                <viewController id="TPw-r3-GKc" customClass="RegisterViewController" customModule="MessengerApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RegisterViewController" id="TPw-r3-GKc" customClass="RegisterViewController" customModule="MessengerApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="IxD-ES-39W">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
