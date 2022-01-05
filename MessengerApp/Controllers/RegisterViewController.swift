@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 
 class RegisterViewController: UIViewController {
-
+    
     
     @IBOutlet weak var firstNameTf: UITextField!
     @IBOutlet weak var lastNameTf: UITextField!
@@ -20,24 +20,80 @@ class RegisterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.title = "Create Account"
+        let tapImage = UITapGestureRecognizer(target: self, action: #selector(self.presentPhotoActionSheet))
+        imageviewProfile.isUserInteractionEnabled = true
+        imageviewProfile.addGestureRecognizer(tapImage)
+        passwordTf.delegate = self
+        emailAddressTf.delegate = self
         
     }
     // MARK: - Navigation
     @IBAction func registerButtonClicked(_ sender: UIButton) {
-        if let password = passwordTf.text,
-           let email = emailAddressTf.text {
-            // Firebase Login / check to see if email is taken
+        registerButtonTapped()
+    }
+    
+    func registerButtonTapped(){
+        emailAddressTf.resignFirstResponder()
+        passwordTf.resignFirstResponder()
+        firstNameTf.resignFirstResponder()
+        lastNameTf.resignFirstResponder()
+        
+        guard let password = passwordTf.text, let email = emailAddressTf.text,
+              let firstName = firstNameTf.text, let lastName = lastNameTf.text,
+              !email.isEmpty, !password.isEmpty, !firstName.isEmpty,
+              !lastName.isEmpty else {
+                  alertUserLoginError()
+                  return
+              }
+        // Firebase Login / check to see if email is taken
+        DatabaseManger.shared.userExists(with: email, completion: { [weak self] exists in
+            //Prevent memory leak
+            guard let strongSelf = self else {
+                return
+            }
+            guard !exists else {
+                strongSelf.alertUserLoginError(message: "Looks like a user account for that email address already exists.")
+                return
+            }
             // try to create an account
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { authResult , error  in
-                guard let result = authResult, error == nil else {
+                guard authResult != nil, error == nil else {
                     print("Error creating user")
                     return
                 }
-                let user = result.user
-                print("Created User: \(user)")
+                DatabaseManger.shared.insertUser(with: ChatAppUser(firstName: firstName,
+                                                                   lastName: lastName,
+                                                                   emailAddress: email))
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             })
+            
+        })
+    }
+    func alertUserLoginError(message: String = "Please enter all information to log in.") {
+        let alert = UIAlertController(title: "Warning",
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title:"Dismiss",
+                                      style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
+    
+}
+// MARK: - TextField Delegate
+
+extension RegisterViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField == emailAddressTf {
+            passwordTf.becomeFirstResponder()
         }
+        else if textField == passwordTf {
+            registerButtonTapped()
+        }
+        
+        return true
     }
     
 }
@@ -45,7 +101,9 @@ class RegisterViewController: UIViewController {
 
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     // get results of user taking picture or selecting from camera roll
-    func presentPhotoActionSheet(){
+    
+    
+    @objc func presentPhotoActionSheet(){
         let actionSheet = UIAlertController(title: "Profile Picture", message: "How would you like to select a picture?", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actionSheet.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { [weak self] _ in
