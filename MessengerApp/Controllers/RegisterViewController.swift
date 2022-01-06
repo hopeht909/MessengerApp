@@ -28,9 +28,11 @@ class RegisterViewController: UIViewController {
         imageviewProfile.addGestureRecognizer(tapImage)
         passwordTf.delegate = self
         emailAddressTf.delegate = self
+        imageviewProfile.layer.masksToBounds = true
+        imageviewProfile.layer.cornerRadius = imageviewProfile.bounds.width / 2
         
     }
-    // MARK: - Navigation
+    // MARK: - registerButtonTapped
     @IBAction func registerButtonClicked(_ sender: UIButton) {
         registerButtonTapped()
     }
@@ -68,9 +70,28 @@ class RegisterViewController: UIViewController {
                     print("Error creating user")
                     return
                 }
-                DatabaseManger.shared.insertUser(with: ChatAppUser(firstName: firstName,
-                                                                   lastName: lastName,
-                                                                   emailAddress: email))
+                let chatUser = ChatAppUser(firstName: firstName,
+                                            lastName: lastName,
+                                            emailAddress: email)
+                DatabaseManger.shared.insertUser(with: chatUser) { success in
+                    if success {
+                        guard let image = strongSelf.imageviewProfile.image,
+                              let data = image.pngData() else{
+                            return
+                        }
+                        let fileName = chatUser.profilePictureFileName
+                        StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName,  completion: {result in
+                            
+                            switch result {
+                            case .success(let downloadUrl):
+                                UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                print(downloadUrl)
+                            case .failure(let error):
+                                print("Storage Manager erroe \(error)")
+                            }
+                        })
+                    }
+                }
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             })
             

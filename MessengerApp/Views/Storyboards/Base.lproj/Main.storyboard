@@ -98,14 +98,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Profile" translatesAutoresizingMaskIntoConstraints="NO" id="7Ad-rA-bpZ">
-                                <rect key="frame" x="142" y="94" width="130" height="130"/>
+                                <rect key="frame" x="132" y="94" width="150" height="150"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="130" id="lBU-sD-1Uo"/>
-                                    <constraint firstAttribute="height" constant="130" id="tKD-ib-xk4"/>
+                                    <constraint firstAttribute="width" constant="150" id="lBU-sD-1Uo"/>
+                                    <constraint firstAttribute="height" constant="150" id="tKD-ib-xk4"/>
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name.." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fod-Go-E14">
-                                <rect key="frame" x="64.5" y="294" width="285" height="40"/>
+                                <rect key="frame" x="64.5" y="314" width="285" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Wc6-wk-v7k"/>
                                     <constraint firstAttribute="width" constant="285" id="knd-6Q-6IA"/>
@@ -114,7 +114,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name.." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="m2w-je-XPt">
-                                <rect key="frame" x="64.5" y="349" width="285" height="40"/>
+                                <rect key="frame" x="64.5" y="369" width="285" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="285" id="kdo-Qv-3vo"/>
                                     <constraint firstAttribute="height" constant="40" id="sgY-TM-i5f"/>
@@ -123,7 +123,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email Address.." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zmD-Ij-Aq3">
-                                <rect key="frame" x="64.5" y="404" width="285" height="40"/>
+                                <rect key="frame" x="64.5" y="424" width="285" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="285" id="DfQ-mX-4XE"/>
                                     <constraint firstAttribute="height" constant="40" id="n4n-Cq-3wl"/>
@@ -132,7 +132,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wVg-YU-UWr">
-                                <rect key="frame" x="64.5" y="459" width="285" height="34"/>
+                                <rect key="frame" x="64.5" y="479" width="285" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="285" id="tyw-Td-Fld"/>
                                     <constraint firstAttribute="height" constant="34" id="uYx-x6-eBp"/>
@@ -141,7 +141,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a68-0C-HCO">
-                                <rect key="frame" x="102" y="593" width="210" height="41"/>
+                                <rect key="frame" x="102" y="613" width="210" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="210" id="CX9-s1-HUc"/>
                                     <constraint firstAttribute="height" constant="41" id="OPW-4Y-mFd"/>
