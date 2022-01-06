@@ -7,9 +7,11 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
     
+    private let spinner = JGProgressHUD(style: .dark)
     
     @IBOutlet weak var firstNameTf: UITextField!
     @IBOutlet weak var lastNameTf: UITextField!
@@ -46,11 +48,15 @@ class RegisterViewController: UIViewController {
                   alertUserLoginError()
                   return
               }
+        spinner.show(in: view)
         // Firebase Login / check to see if email is taken
         DatabaseManger.shared.userExists(with: email, completion: { [weak self] exists in
             //Prevent memory leak
             guard let strongSelf = self else {
                 return
+            }
+            DispatchQueue.main.async {
+                strongSelf.spinner.dismiss()
             }
             guard !exists else {
                 strongSelf.alertUserLoginError(message: "Looks like a user account for that email address already exists.")

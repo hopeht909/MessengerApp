@@ -7,20 +7,44 @@
 
 import UIKit
 import FirebaseAuth
+import FBSDKLoginKit
+import FacebookLogin
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
+    
+    @IBOutlet weak var loginButton: UIButton!
+    
+    private let scrollView: UIScrollView = {
+           let scrollView = UIScrollView()
+           scrollView.clipsToBounds = true
+           return scrollView
+       }()
+    let facebookLoginButton = FBLoginButton()
+  
+
    
     @IBOutlet weak var emailAddressTf: UITextField!
     
     @IBOutlet weak var passwordTf: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
         self.title = "Log In"
-        emailAddressTf.delegate = self
-        passwordTf.delegate = self
-    
+       // emailAddressTf.delegate = self
+        //passwordTf.delegate = self
+        facebookLoginButton.delegate = self
+        facebookLoginButton.center = view.center
+        facebookLoginButton.frame = CGRect(x: 100,
+                                           y: 600,
+                                           width: loginButton.frame.width + 30,
+                                           height: loginButton.frame.height)
+       
+        view.addSubview(facebookLoginButton)
     }
+
     
     // MARK: - Navigation
     @IBAction func logInButtonClicked(_ sender: UIButton) {
@@ -37,12 +61,17 @@ class LoginViewController: UIViewController {
                   alertUserLoginError()
                   return
               }
+        spinner.show(in: view)
         // Firebase Login
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
+            
             guard let strongSelf = self else {
                     return
             }
-
+            DispatchQueue.main.async {
+                strongSelf.spinner.dismiss()
+            }
+           
             guard let result = authResult, error == nil else {
                 print("Failed to log in user with email \(email)")
                 return
@@ -86,4 +115,37 @@ extension LoginViewController: UITextFieldDelegate {
     }
 
 }
+extension LoginViewController: LoginButtonDelegate {
+    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+        // no operation
+    }
+
+    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        guard let token = result?.token?.tokenString else {
+            print("User failed to log in with facebook")
+            return
+        }
+
+     
+            let credential = FacebookAuthProvider.credential(withAccessToken: token)
+            FirebaseAuth.Auth.auth().signIn(with: credential, completion: { [weak self] authResult, error in
+                guard let strongSelf = self else {
+                    return
+                }
+
+                guard authResult != nil, error == nil else {
+                    if let error = error {
+                        print("Facebook credential login failed, MFA may be needed - \(error)")
+                    }
+                    return
+                }
+
+                print("Successfully logged user in")
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            })
+        }
+}
+
+
+
 
