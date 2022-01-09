@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
         scrollView.clipsToBounds = true
         return scrollView
     }()
-    let facebookLoginButton = FBLoginButton()
+   
     
     
     
@@ -33,16 +33,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         self.title = "Log In"
-        // emailAddressTf.delegate = self
-        //passwordTf.delegate = self
-        facebookLoginButton.delegate = self
-        facebookLoginButton.center = view.center
-        facebookLoginButton.frame = CGRect(x: 100,
-                                           y: 600,
-                                           width: loginButton.frame.width + 30,
-                                           height: loginButton.frame.height)
         
-        view.addSubview(facebookLoginButton)
     }
     
     
@@ -162,7 +153,5 @@ extension LoginViewController: LoginButtonDelegate {
         })
     }
 }
-
-
 
 

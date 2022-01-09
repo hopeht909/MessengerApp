@@ -162,10 +162,12 @@ final class ConversationsViewController: UIViewController {
 
     private func validateAuth() {
         if FirebaseAuth.Auth.auth().currentUser == nil {
-            let vc = LoginViewController()
-            let nav = UINavigationController(rootViewController: vc)
-            nav.modalPresentationStyle = .fullScreen
-            present(nav, animated: false)
+            // present login view controller
+                       let logInVC = storyboard?.instantiateViewController(withIdentifier: "NavigationController") as! UINavigationController
+                       logInVC.modalPresentationStyle = .fullScreen
+
+                       //navigationController?.pushViewController(logInVC, animated: true)
+                       present(logInVC, animated: false)
         }
     }
 
