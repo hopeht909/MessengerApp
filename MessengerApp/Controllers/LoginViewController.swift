@@ -18,22 +18,22 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginButton: UIButton!
     
     private let scrollView: UIScrollView = {
-           let scrollView = UIScrollView()
-           scrollView.clipsToBounds = true
-           return scrollView
-       }()
+        let scrollView = UIScrollView()
+        scrollView.clipsToBounds = true
+        return scrollView
+    }()
     let facebookLoginButton = FBLoginButton()
-  
-
-   
+    
+    
+    
     @IBOutlet weak var emailAddressTf: UITextField!
     
     @IBOutlet weak var passwordTf: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         self.title = "Log In"
-       // emailAddressTf.delegate = self
+        // emailAddressTf.delegate = self
         //passwordTf.delegate = self
         facebookLoginButton.delegate = self
         facebookLoginButton.center = view.center
@@ -41,10 +41,10 @@ class LoginViewController: UIViewController {
                                            y: 600,
                                            width: loginButton.frame.width + 30,
                                            height: loginButton.frame.height)
-       
+        
         view.addSubview(facebookLoginButton)
     }
-
+    
     
     // MARK: - Navigation
     @IBAction func logInButtonClicked(_ sender: UIButton) {
@@ -66,33 +66,50 @@ class LoginViewController: UIViewController {
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
             
             guard let strongSelf = self else {
-                    return
+                return
             }
             DispatchQueue.main.async {
                 strongSelf.spinner.dismiss()
             }
-           
+            
             guard let result = authResult, error == nil else {
                 print("Failed to log in user with email \(email)")
                 return
             }
             let user = result.user
+            let safeEmail = DatabaseManger.safeEmail(emailAddress: email)
+            DatabaseManger.shared.getDataFor(path: safeEmail, completion: { result in
+                switch result {
+                case .success(let data):
+                    guard let userData = data as? [String: Any],
+                          let firstName = userData["first_name"] as? String,
+                          let lastName = userData["last_name"] as? String else {
+                              return
+                          }
+                    UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                    
+                case .failure(let error):
+                    print("Failed to read data with error \(error)")
+                }
+            })
+            
+            UserDefaults.standard.set(email, forKey: "email")
             print("logged in user: \(user)")
             // if this succeeds, dismiss
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         })
     }
-      
+    
     
     func alertUserLoginError() {
-           let alert = UIAlertController(title: "Warning",
-                                         message: "Please enter all information to log in.",
-                                         preferredStyle: .alert)
-           alert.addAction(UIAlertAction(title:"Dismiss",
-                                         style: .cancel, handler: nil))
-           present(alert, animated: true)
-       }
-
+        let alert = UIAlertController(title: "Warning",
+                                      message: "Please enter all information to log in.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title:"Dismiss",
+                                      style: .cancel, handler: nil))
+        present(alert, animated: true)
+    }
+    
     @IBAction func registerBarButtonAction(_ sender: UIBarButtonItem) {
         let registerVC = storyboard?.instantiateViewController(withIdentifier: "RegisterViewController") as! RegisterViewController
         
@@ -101,49 +118,49 @@ class LoginViewController: UIViewController {
 }
 // MARK: - TextField Delegate
 extension LoginViewController: UITextFieldDelegate {
-
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-
+        
         if textField == emailAddressTf {
             passwordTf.becomeFirstResponder()
         }
         else if textField == passwordTf {
             loginButtonTapped()
         }
-
+        
         return true
     }
-
+    
 }
 extension LoginViewController: LoginButtonDelegate {
     func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
         // no operation
     }
-
+    
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
         guard let token = result?.token?.tokenString else {
             print("User failed to log in with facebook")
             return
         }
-
-     
-            let credential = FacebookAuthProvider.credential(withAccessToken: token)
-            FirebaseAuth.Auth.auth().signIn(with: credential, completion: { [weak self] authResult, error in
-                guard let strongSelf = self else {
-                    return
+        
+        
+        let credential = FacebookAuthProvider.credential(withAccessToken: token)
+        FirebaseAuth.Auth.auth().signIn(with: credential, completion: { [weak self] authResult, error in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            guard authResult != nil, error == nil else {
+                if let error = error {
+                    print("Facebook credential login failed, MFA may be needed - \(error)")
                 }
-
-                guard authResult != nil, error == nil else {
-                    if let error = error {
-                        print("Facebook credential login failed, MFA may be needed - \(error)")
-                    }
-                    return
-                }
-
-                print("Successfully logged user in")
-                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
-            })
-        }
+                return
+            }
+            
+            print("Successfully logged user in")
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+        })
+    }
 }
 
 
