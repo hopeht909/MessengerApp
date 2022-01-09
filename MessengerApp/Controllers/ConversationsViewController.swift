@@ -155,12 +155,11 @@ class ConversationsViewController: UIViewController {
     }
 }
 extension ConversationsViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return conversations.count
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = conversations[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
@@ -168,19 +167,22 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
         cell.configure(with: model)
         return cell
     }
-    
-    // when user taps on a cell, we want to push the chat screen onto the stack
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-        //        let model = conversations[indexPath.row]
-        //               openConversation(model)
+        openConversation(model)
+    }
+
+    func openConversation(_ model: Conversation) {
         let vc = ChatViewController(with: model.otherUserEmail, id: model.id)
         vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }
-    func openConversation(_ model: Conversation) {
-        
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
+
 }
