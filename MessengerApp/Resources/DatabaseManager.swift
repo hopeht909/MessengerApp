@@ -560,39 +560,78 @@ extension DatabaseManger{
             }
         })
     }
-    public func conversationExists(iwth targetRecipientEmail: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let safeRecipientEmail = DatabaseManger.safeEmail(emailAddress: targetRecipientEmail)
-        guard let senderEmail = UserDefaults.standard.value(forKey: "email") as? String else {
-            return
-        }
-        let safeSenderEmail = DatabaseManger.safeEmail(emailAddress: senderEmail)
-
-        database.child("\(safeRecipientEmail)/conversations").observeSingleEvent(of: .value, with: { snapshot in
-            guard let collection = snapshot.value as? [[String: Any]] else {
-                completion(.failure(DatabaseError.failedToFetch))
+    public func deleteConversation(conversationId: String, completion: @escaping (Bool) -> Void) {
+            guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
                 return
             }
+            let safeEmail = DatabaseManger.safeEmail(emailAddress: email)
 
-            // iterate and find conversation with target sender
-            if let conversation = collection.first(where: {
-                guard let targetSenderEmail = $0["other_user_email"] as? String else {
-                    return false
+            print("Deleting conversation with id: \(conversationId)")
+
+            // Get all conversations for current user
+            // delete conversation in collection with target id
+            // reset those conversations for the user in database
+            let ref = database.child("\(safeEmail)/conversations")
+            ref.observeSingleEvent(of: .value) { snapshot in
+                if var conversations = snapshot.value as? [[String: Any]] {
+                    var positionToRemove = 0
+                    for conversation in conversations {
+                        if let id = conversation["id"] as? String,
+                            id == conversationId {
+                            print("found conversation to delete")
+                            break
+                        }
+                        positionToRemove += 1
+                    }
+
+                    conversations.remove(at: positionToRemove)
+                    ref.setValue(conversations, withCompletionBlock: { error, _  in
+                        guard error == nil else {
+                            completion(false)
+                            print("faield to write new conversatino array")
+                            return
+                        }
+                        print("deleted conversaiton")
+                        completion(true)
+                    })
                 }
-                return safeSenderEmail == targetSenderEmail
-            }) {
-                // get id
-                guard let id = conversation["id"] as? String else {
+            }
+        }
+
+        public func conversationExists(iwth targetRecipientEmail: String, completion: @escaping (Result<String, Error>) -> Void) {
+            let safeRecipientEmail = DatabaseManger.safeEmail(emailAddress: targetRecipientEmail)
+            guard let senderEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+                return
+            }
+            let safeSenderEmail = DatabaseManger.safeEmail(emailAddress: senderEmail)
+
+            database.child("\(safeRecipientEmail)/conversations").observeSingleEvent(of: .value, with: { snapshot in
+                guard let collection = snapshot.value as? [[String: Any]] else {
                     completion(.failure(DatabaseError.failedToFetch))
                     return
                 }
-                completion(.success(id))
-                return
-            }
 
-            completion(.failure(DatabaseError.failedToFetch))
-            return
-        })
-    }
+                // iterate and find conversation with target sender
+                if let conversation = collection.first(where: {
+                    guard let targetSenderEmail = $0["other_user_email"] as? String else {
+                        return false
+                    }
+                    return safeSenderEmail == targetSenderEmail
+                }) {
+                    // get id
+                    guard let id = conversation["id"] as? String else {
+                        completion(.failure(DatabaseError.failedToFetch))
+                        return
+                    }
+                    completion(.success(id))
+                    return
+                }
+
+                completion(.failure(DatabaseError.failedToFetch))
+                return
+            })
+        }
+
 
 }
 

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C3CBEC5027858AC3008445D5 /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBEC4F27858AC3008445D5 /* PhotoViewerViewController.swift */; };
 		C3CBEC5227858B07008445D5 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBEC5127858B07008445D5 /* NewConversationViewController.swift */; };
 		C3CBEC542785DDC7008445D5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBEC532785DDC7008445D5 /* ProfileViewController.swift */; };
 		C3CBEC562785DED2008445D5 /* ProfileViewModel .swift in Sources */ = {isa = PBXBuildFile; fileRef = C3CBEC552785DED2008445D5 /* ProfileViewModel .swift */; };
@@ -40,7 +39,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C3CBEC4F27858AC3008445D5 /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
 		C3CBEC5127858B07008445D5 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		C3CBEC532785DDC7008445D5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		C3CBEC552785DED2008445D5 /* ProfileViewModel .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileViewModel .swift"; sourceTree = "<group>"; };
@@ -138,7 +136,6 @@
 				C3E98F6E27831BC0001B9B5A /* LoginViewController.swift */,
 				C3E98F8227843D35001B9B5A /* RegisterViewController.swift */,
 				C3E98F9127845F3A001B9B5A /* ConversationsViewController.swift */,
-				C3CBEC4F27858AC3008445D5 /* PhotoViewerViewController.swift */,
 				C3CBEC5127858B07008445D5 /* NewConversationViewController.swift */,
 				C3CBEC532785DDC7008445D5 /* ProfileViewController.swift */,
 				C3CBEC682786D8DA008445D5 /* ChatViewController.swift */,
@@ -276,7 +273,6 @@
 				C3E98F9427846073001B9B5A /* DatabaseManager.swift in Sources */,
 				C3E98F9627846099001B9B5A /* StorageManager.swift in Sources */,
 				C3E98F6B27831BC0001B9B5A /* AppDelegate.swift in Sources */,
-				C3CBEC5027858AC3008445D5 /* PhotoViewerViewController.swift in Sources */,
 				C3CBEC7127873BDE008445D5 /* ConversationTableViewCell.swift in Sources */,
 				C3CBEC5227858B07008445D5 /* NewConversationViewController.swift in Sources */,
 				C3CBEC7327873DF9008445D5 /* Conversation Model.swift in Sources */,
