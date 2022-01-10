@@ -159,6 +159,11 @@ final class ConversationsViewController: UIViewController {
         super.viewDidAppear(animated)
         validateAuth()
     }
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            startListeningForCOnversations()
+ }
+
 
     private func validateAuth() {
         if FirebaseAuth.Auth.auth().currentUser == nil {
